@@ -1,31 +1,53 @@
-# importing the module
 from pytube import YouTube
+from ClipboardListener import ClipboardWatcher
+from converter import convert2mp3
+from pathlib import Path
+import time
 
 # where to save
-SAVE_PATH = "E:/"  # to_do
+SAVE_PATH = Path(__file__).parent / "downloads"
 
-# link of the video to be downloaded
-link = "https://www.youtube.com/watch?v=WPyC3s3DUYc"  # "https://www.youtube.com/watch?v=xWOoBJUqlbI"
 
-try:
-    # object creation using YouTube
-    # which was imported in the beginning
-    yt = YouTube(link)
-except:
-    print("Connection Error")  # to handle exception
+def is_youtube_url(url:str):
+    return any([pat in url for pat in ["youtube", "youtu.be"]]) and (url.lower().startswith("http://") or
+                                                                     url.lower().startswith("https://") or
+                                                                     url.lower().startswith("www."))
 
-# filters out all the files with "mp4" extension
-mp4files = yt.filter('mp4')
 
-# to set the name of the file
-yt.set_filename('GeeksforGeeks Video')
+def ytdownloader(url):
+    try:
+        yt = YouTube(url)
+    except:
+        print("Connection Error")  # to handle exception
 
-# get the video with the extension and
-# resolution passed in the get() function
-d_video = yt.get(mp4files[-1].extension, mp4files[-1].resolution)
-try:
-    # downloading the video
-    d_video.download(SAVE_PATH)
-except:
-    print("Some Error!")
-print('Task Completed!')
+    try:
+        # for debugging:
+        # for stream in yt.streams.filter(file_extension='mp4').order_by('abr').desc():
+        #     print(stream)
+
+        stream = yt.streams.filter(file_extension='mp4').order_by('abr').desc()[1]
+        print(f'Downloading {stream}')
+        file_path = stream.download(SAVE_PATH)
+
+        print(f'Converting {file_path}')
+        convert2mp3(file_path)
+    except Exception as e:
+        print(e)
+
+
+def main():
+    watcher = ClipboardWatcher(is_youtube_url,
+                               ytdownloader,
+                               1.)
+    watcher.start()
+    print("Waiting for clipboard link...")
+    while True:
+        try:
+            time.sleep(10)
+        except KeyboardInterrupt:
+            watcher.stop()
+            break
+
+
+if __name__ == "__main__":
+    main()
