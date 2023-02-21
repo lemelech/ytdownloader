@@ -4,11 +4,12 @@ from pathlib import Path
 
 def convert2mp3(file_path, quality=5):
     file_path = str(file_path)
-    print('starting to convert: {file_path}...')
+    print('starting to convert: {file_path}...', end='')
     process = subprocess.Popen(['ffmpeg', '-i', file_path, '-q:a', str(quality), '-map', 'a', file_path + '.mp3'],
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
+    print('Done.')
     print(stdout, stderr)
 
 
