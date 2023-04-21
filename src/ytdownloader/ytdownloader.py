@@ -1,6 +1,6 @@
 from pytube import YouTube
-from ClipboardListener import ClipboardWatcher
-from converter import convert2mp3
+from .ClipboardListener import ClipboardWatcher
+from .converter import convert2mp3
 from pathlib import Path
 import time
 
