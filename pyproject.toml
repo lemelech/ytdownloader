@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "pyperclip==1.8.2",
-    "pytube @ git+https://github.com/nficano/pytube@d3d18691b3e99b2d3b4d620446b088a1c32896c6",
+    "pytube @ git+https://github.com/pytube/pytube",
     "pytube3==9.6.4",
     "typing_extensions==4.4.0",
 ]
