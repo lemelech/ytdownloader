@@ -17,8 +17,9 @@ def is_youtube_url(url:str):
 def ytdownloader(url):
     try:
         yt = YouTube(url)
-    except:
+    except Exception as e:
         print("Connection Error")  # to handle exception
+        print(e)
 
     try:
         # for debugging:
