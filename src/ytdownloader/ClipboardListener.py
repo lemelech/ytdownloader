@@ -1,6 +1,7 @@
 import time
 import threading
 import pyperclip
+import logging
 
 """
 source: https://stackoverflow.com/questions/14685999/trigger-an-event-when-clipboard-content-changes
@@ -28,11 +29,14 @@ class ClipboardWatcher(threading.Thread):
     def run(self):
         recent_value = ""
         while not self._stopping:
-            tmp_value = pyperclip.paste()
-            if tmp_value != recent_value:
-                recent_value = tmp_value
-                if self._predicate(recent_value):
-                    self._callback(recent_value)
+            try:
+                tmp_value = pyperclip.paste()
+                if tmp_value != recent_value:
+                    recent_value = tmp_value
+                    if self._predicate(recent_value):
+                        self._callback(recent_value)
+            except pyperclip.PyperclipWindowsException as e:
+                logger.exception("Error in clipboard")
             time.sleep(self._pause)
 
     def stop(self):
@@ -52,6 +56,6 @@ def main():
             watcher.stop()
             break
 
-
+logger = logging.getLogger()
 if __name__ == "__main__":
     main()
