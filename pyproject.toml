@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -21,7 +21,6 @@ dependencies = [
     "pytube @ git+https://github.com/pytube/pytube",
     "pytube3==9.6.4",
     "typing_extensions==4.4.0",
-]
 
 [project.scripts]
 yt2mp3 = "ytdownloader:ytdownloader.main"
