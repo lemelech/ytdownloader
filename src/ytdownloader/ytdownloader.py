@@ -15,7 +15,7 @@ _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID_CREATOR"]
 
 # where to save
 SAVE_PATH = Path(__file__).parent / "downloads"
-
+LOG_PATH = Path(__file__).parent / "downloads.log"
 
 def is_youtube_url(url:str):
     return any([pat in url for pat in ["youtube", "youtu.be"]]) and (url.lower().startswith("http://") or
@@ -39,6 +39,8 @@ def ytdownloader(url):
         print(f'Downloading {stream}')
         file_path = stream.download(SAVE_PATH)
 
+        with open(LOG_PATH, 'a') as f:
+            f.write(f'{url} : {file_path}\n')
         print(f'Converting {file_path}')
         convert2mp3(file_path)
     except Exception as e:
