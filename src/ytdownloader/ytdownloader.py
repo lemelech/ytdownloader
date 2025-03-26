@@ -24,12 +24,25 @@ def is_youtube_url(url:str):
                                                                      url.lower().startswith("https://") or
                                                                      url.lower().startswith("www."))
 
+def download_best_audio_as_mp3(video_url, save_path=SAVE_PATH): # got from https://dev.to/_ken0x/downloading-and-converting-youtube-videos-to-mp3-using-yt-dlp-in-python-20c5
+    ydl_opts = {
+        'outtmpl': str(save_path) + '/%(title)s.%(ext)s',  # Save path and file name
+        'postprocessors': [{  # Post-process to convert to MP3
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',  # Convert to mp3
+            'preferredquality': '0',  # '0' means best quality, auto-determined by source
+        }],
+    }
+    with YoutubeDL(ydl_opts) as ydl:
+        ydl.download([video_url])
+
 
 def ytdownloader(url):
     try:
         print(f'Downloading {url}')
-        with YoutubeDL(ydl_opts) as ydl:
-            ydl.download(url)
+        # with YoutubeDL(ydl_opts) as ydl:
+        #     ydl.download(url)
+        download_best_audio_as_mp3(url,  SAVE_PATH)   
 
         with open(LOG_PATH, 'a') as f:
             f.write(f'{url} \n')
