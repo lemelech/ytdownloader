@@ -37,12 +37,16 @@ def download_best_audio_as_mp3(video_url, save_path=SAVE_PATH): # got from https
         ydl.download([video_url])
 
 
-def ytdownloader(url):
+def ytdownloader(url, single=True):
     try:
-        print(f'Downloading {url}')
+        download_url = url
+        if single:
+            download_url = get_clean_youtube_url(url)
+
+        print(f'Downloading {download_url}')
         # with YoutubeDL(ydl_opts) as ydl:
         #     ydl.download(url)
-        download_best_audio_as_mp3(url,  SAVE_PATH)   
+        download_best_audio_as_mp3(download_url,  SAVE_PATH)   
 
         with open(LOG_PATH, 'a') as f:
             f.write(f'{url} \n')
@@ -64,6 +68,29 @@ def main():
         except KeyboardInterrupt:
             watcher.stop()
             break
+
+
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+
+def get_clean_youtube_url(url):
+    parsed = urlparse(url)
+    
+    # Keep only the video id parameter
+    query_params = parse_qs(parsed.query)
+    clean_query = {'v': query_params.get('v', [None])[0]} if 'v' in query_params else {}
+    
+    # Rebuild URL with only v= parameter
+    new_query = urlencode(clean_query, doseq=True)
+    clean_url = urlunparse((
+        parsed.scheme,
+        parsed.netloc,
+        parsed.path,
+        parsed.params,
+        new_query,
+        ''  # remove fragment
+    ))
+    
+    return clean_url
 
 
 if __name__ == "__main__":
