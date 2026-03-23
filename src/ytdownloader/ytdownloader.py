@@ -17,7 +17,7 @@ ydl_opts = {
                                 'key': 'FFmpegExtractAudio',
                                 'preferredcodec': 'mp3',}#'m4a',}
                                ],
-            'nocheckcertificate': True
+            'no_check_certificate': True
             }
 def is_youtube_url(url:str):
     return any([pat in url for pat in ["youtube", "youtu.be"]]) and (url.lower().startswith("http://") or

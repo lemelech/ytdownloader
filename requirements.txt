@@ -1,3 +1,5 @@
 pyperclip==1.8.2
 yt-dlp
+# also install ffmpeg from yt-dlp 
+# also install as intructed: https://github.com/yt-dlp/yt-dlp/wiki/EJS
 typing_extensions
